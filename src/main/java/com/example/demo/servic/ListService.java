@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ListService {
     List<MyListAc> findAllList();
+    MyListAc findIdList(Long myListAc_id);
 }

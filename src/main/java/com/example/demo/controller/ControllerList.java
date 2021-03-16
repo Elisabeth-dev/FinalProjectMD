@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.MyListAcIdResponseDTO;
 import com.example.demo.DTO.MyListAcResponseDTO;
 import com.example.demo.servic.ListService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,6 +32,13 @@ public class ControllerList {
 
         return listService.findAllList().stream().map(MyListAcResponseDTO::from).collect(Collectors.toList());
     }
+
+    @GetMapping("/lists/{id}")
+    public MyListAcIdResponseDTO findAlllist(@PathVariable Long id){
+
+        return MyListAcIdResponseDTO.from(listService.findIdList(id));
+    }
+
 
 
 }

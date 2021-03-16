@@ -18,4 +18,10 @@ public class ListAcDAO implements ListDAO{
 
         return entityManager.createQuery("select e from MyListAc e", MyListAc.class).getResultList();
     }
+
+    @Override
+    public MyListAc findListId(Long myListAc_id) {
+        return entityManager.find(MyListAc.class, myListAc_id);
+    }
+
 }

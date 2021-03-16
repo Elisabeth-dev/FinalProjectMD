@@ -9,7 +9,7 @@ import java.util.List;
 public interface ListDAO {
 
   List<MyListAc> findAll();
-
+  MyListAc findListId(Long myListAc_id);
 
 
 }

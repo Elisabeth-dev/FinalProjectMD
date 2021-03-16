@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import com.example.demo.mylists.MyList;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,14 +11,16 @@ import java.util.List;
 public class MyListAc {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long myListAcId;
 
     private String nameAc;
 
+    @JsonBackReference
     @OneToMany( mappedBy = "myListAc")
     @Column(name = "bankCard")
     private List<BankCard> bankCard;
+
 
     public Long getMyListAcId() {
         return myListAcId;

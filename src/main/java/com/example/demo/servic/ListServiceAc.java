@@ -18,4 +18,9 @@ public class ListServiceAc implements ListService {
     public List<MyListAc> findAllList() {
         return listDAO.findAll();
     }
+
+    @Override
+    public MyListAc findIdList(Long myListAc_id) {
+        return listDAO.findListId(myListAc_id);
+    }
 }

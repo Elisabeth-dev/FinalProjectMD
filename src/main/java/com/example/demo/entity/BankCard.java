@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,16 +9,48 @@ import javax.persistence.*;
 public class BankCard {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bankCardId;
 
     private String nameCard;
 
     private int cardNumber;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "myListAc_id")
     private MyListAc myListAc;
 
 
+    public Long getBankCardId() {
+        return bankCardId;
+    }
+
+    public void setBankCardId(Long bankCardId) {
+        this.bankCardId = bankCardId;
+    }
+
+    public String getNameCard() {
+        return nameCard;
+    }
+
+    public void setNameCard(String nameCard) {
+        this.nameCard = nameCard;
+    }
+
+    public int getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(int cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public MyListAc getMyListAc() {
+        return myListAc;
+    }
+
+    public void setMyListAc(MyListAc myListAc) {
+        this.myListAc = myListAc;
+    }
 }
