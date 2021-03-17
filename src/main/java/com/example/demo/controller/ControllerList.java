@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.DTO.BankCardRequestDTO;
-import com.example.demo.DTO.ListAcRequestDTO;
-import com.example.demo.DTO.MyListAcIdResponseDTO;
-import com.example.demo.DTO.MyListAcResponseDTO;
+import com.example.demo.DTO.*;
 import com.example.demo.servic.ListService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +37,7 @@ public class ControllerList {
         return MyListAcIdResponseDTO.from(listService.findIdList(id));
     }
 
-    @PostMapping("/lists/{id}/add_element")
+    @PostMapping("/lists/{id}/element")
     public ResponseEntity addNewCard(@PathVariable Long id, @RequestBody BankCardRequestDTO bankCardRequestDTO){
        listService.creatCardById(bankCardRequestDTO.toBancCard(), id);
 
@@ -54,6 +51,27 @@ public class ControllerList {
     }
 
 
+    @DeleteMapping("/lists/{id}/elements/{id_element}")
+    public ResponseEntity deleteElements(@PathVariable Long id, @PathVariable Long id_element){
+
+        try {
+            listService.deleteElementById(id, id_element);
+            return ResponseEntity.ok().build();
+        } catch (IndexOutOfBoundsException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/lists/{id}/elements/{id_element}")
+    public BankCardByIdResponseDTO findBankCardById(@PathVariable Long id, @PathVariable Long id_element){
+        return  BankCardByIdResponseDTO.fromBC(listService.findBankCardById(id,id_element));
+    }
+
+    @GetMapping("/lists/{id}/size")
+    public Long getSizeBankCards(@PathVariable Long id){
+
+        return listService.getSizeBankCard(id);
+    }
 
 
 }

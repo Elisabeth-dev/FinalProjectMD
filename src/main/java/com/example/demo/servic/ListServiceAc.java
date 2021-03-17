@@ -35,4 +35,21 @@ public class ListServiceAc implements ListService {
     public MyListAc creatMyListAc(MyListAc myListAc) {
         return listDAO.creatListAc(myListAc);
     }
+
+    @Override
+    public void deleteElementById(Long myListAc_id, Long bankCard_Id) {
+
+        listDAO.deleteElementById(myListAc_id,bankCard_Id);
+    }
+
+    @Override
+    public BankCard findBankCardById(Long myListAc_id, Long bankCard_Id) {
+        return listDAO.findBankCardById(myListAc_id, bankCard_Id);
+    }
+
+    @Override
+    public Long getSizeBankCard(Long myListAc_id) {
+        return listDAO.getSizeBankCard(myListAc_id);
+    }
+
 }

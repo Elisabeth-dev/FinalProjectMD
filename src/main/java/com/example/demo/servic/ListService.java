@@ -12,4 +12,7 @@ public interface ListService {
     MyListAc findIdList(Long myListAc_id);
     BankCard creatCardById(BankCard bankCard, Long myListAc_id);
     MyListAc creatMyListAc(MyListAc myListAc);
+    void deleteElementById(Long myListAc_id, Long bankCard_Id);
+    BankCard findBankCardById(Long myListAc_id, Long bankCard_Id);
+    Long getSizeBankCard(Long myListAc_id);
 }

@@ -43,4 +43,36 @@ public class ListAcDAO implements ListDAO{
         return myListAc;
     }
 
+    @Override
+    @Transactional
+    public void deleteElementById(Long myListAc_id, Long bankCard_Id) {
+        BankCard bankCard = entityManager.createQuery("select b from BankCard b where b.bankCardId = :id and b.myListAc = :list", BankCard.class)
+                .setParameter("id", bankCard_Id)
+                .setParameter("list", findListId(myListAc_id))
+                .getSingleResult();
+        entityManager.remove(bankCard);
+//        entityManager.createQuery("delete BankCard where myListAc = myListAc_id AND bankCardId = bankCard_Id ");
+
+    }
+
+    @Override
+    public BankCard findBankCardById(Long myListAc_id, Long bankCard_Id) {
+        BankCard bankCard = entityManager.createQuery("select b from BankCard b where b.bankCardId = :id and b.myListAc = :list", BankCard.class)
+                .setParameter("id", bankCard_Id)
+                .setParameter("list", findListId(myListAc_id))
+                .getSingleResult();
+        return bankCard;
+    }
+
+    @Override
+    public Long getSizeBankCard(Long myListAc_id) {
+
+        Long size = (Long) entityManager.createQuery("select count(b.bankCardId) from BankCard b where b.myListAc = :id")
+                .setParameter("id", findListId(myListAc_id))
+                .getSingleResult();
+        //Long size = entityManager.createNativeQuery("SELECT COUNT (b) FROM bank_card b WHERE b.")
+
+        return size;
+    }
+
 }

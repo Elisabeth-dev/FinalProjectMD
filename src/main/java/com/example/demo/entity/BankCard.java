@@ -23,7 +23,13 @@ public class BankCard {
     private MyListAc myListAc;
 
 
+    public Long getBankCardId() {
+        return bankCardId;
+    }
 
+    public void setBankCardId(Long bankCardId) {
+        this.bankCardId = bankCardId;
+    }
 
     public String getNameCard() {
         return nameCard;
