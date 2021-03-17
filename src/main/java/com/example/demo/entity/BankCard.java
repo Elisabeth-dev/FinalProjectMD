@@ -9,7 +9,8 @@ import javax.persistence.*;
 public class BankCard {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long bankCardId;
 
     private String nameCard;
@@ -22,13 +23,7 @@ public class BankCard {
     private MyListAc myListAc;
 
 
-    public Long getBankCardId() {
-        return bankCardId;
-    }
 
-    public void setBankCardId(Long bankCardId) {
-        this.bankCardId = bankCardId;
-    }
 
     public String getNameCard() {
         return nameCard;

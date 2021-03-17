@@ -1,6 +1,7 @@
 package com.example.demo.DAO;
 
 
+import com.example.demo.entity.BankCard;
 import com.example.demo.entity.MyListAc;
 import com.example.demo.mylists.MyList;
 
@@ -10,6 +11,8 @@ public interface ListDAO {
 
   List<MyListAc> findAll();
   MyListAc findListId(Long myListAc_id);
+  BankCard creatCardById(BankCard bankCard, Long myListAc_id);
+  MyListAc creatListAc(MyListAc myListAc);
 
 
 }
