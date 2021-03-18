@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.DTO.*;
+import com.example.demo.entity.BankCard;
+import com.example.demo.mylists.MyList;
 import com.example.demo.servic.ListService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +85,17 @@ public class ControllerList {
     public Long findDuplicatesElements(@PathVariable Long id, @RequestParam(name = "element") Long json_element){
 
         return listService.findDuplicatesElements(id, json_element);
+    }
+
+    @GetMapping("/lists/{id}/sort")
+    public MyList<BankCard> sort(@PathVariable Long id){
+        return listService.sort(id);
+    }
+
+    @GetMapping("/lists/{id}/shuffle")
+    public MyList<BankCard> shuffle(@PathVariable Long id){
+        return listService.shuffle(id);
+
     }
 
 }

@@ -11,7 +11,7 @@ public class MyList<T> implements AdvancedList<T>, AuthorHolder {
     private int size = 0;
 
     @Override
-    public AdvancedList<T> shuffle() {
+    public MyList<T> shuffle() {
         for(int i = 0; i < size; i++){
             int randomNumber = i + (int)(Math.random() * (size - i));
             Object item = array[randomNumber];
@@ -22,7 +22,7 @@ public class MyList<T> implements AdvancedList<T>, AuthorHolder {
     }
 
     @Override
-    public AdvancedList<T> sort(Comparator<T> comparator) {
+    public MyList<T> sort(Comparator<T> comparator) {
 
         MyList<T> temporaryObject = new MyList<>();
 

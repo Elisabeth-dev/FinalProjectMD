@@ -4,6 +4,7 @@ package com.example.demo.servic;
 import com.example.demo.DTO.MyListAcResponseDTO;
 import com.example.demo.entity.BankCard;
 import com.example.demo.entity.MyListAc;
+import com.example.demo.mylists.MyList;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface ListService {
     Long getSizeBankCard(Long myListAc_id);
     void addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList);
     Long findDuplicatesElements(Long id, Long json_element);
+    MyList<BankCard> sort(Long id);
+    MyList<BankCard> shuffle(Long id);
 }

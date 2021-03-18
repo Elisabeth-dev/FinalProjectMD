@@ -62,4 +62,14 @@ public class ListServiceAc implements ListService {
         return listDAO.findDuplicatesElements(id,json_element);
     }
 
+    @Override
+    public MyList<BankCard> sort(Long id) {
+        return listDAO.sort(id);
+    }
+
+    @Override
+    public MyList<BankCard> shuffle(Long id) {
+        return listDAO.shuffle(id);
+    }
+
 }

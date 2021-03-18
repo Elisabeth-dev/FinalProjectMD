@@ -23,6 +23,15 @@ public class BankCard {
     private MyListAc myListAc;
 
 
+    public BankCard() {
+    }
+
+    public BankCard(String nameCard, int cardNumber, MyListAc myListAc) {
+        this.nameCard = nameCard;
+        this.cardNumber = cardNumber;
+        this.myListAc = myListAc;
+    }
+
     public Long getBankCardId() {
         return bankCardId;
     }

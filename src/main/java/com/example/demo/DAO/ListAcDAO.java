@@ -2,11 +2,15 @@ package com.example.demo.DAO;
 
 import com.example.demo.entity.BankCard;
 import com.example.demo.entity.MyListAc;
+import com.example.demo.mylists.AdvancedList;
+import com.example.demo.mylists.MyList;
+import org.apache.logging.log4j.message.Message;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 
 @Repository
@@ -107,6 +111,33 @@ public class ListAcDAO implements ListDAO{
 
 
         return res;
+    }
+
+
+    Comparator<BankCard> comparator = Comparator.comparing(BankCard::getCardNumber);
+
+    @Override
+    public boolean equals(Object obj) {
+        return false;
+    }
+
+
+    @Override
+    public MyList<BankCard> sort(Long id) {
+        MyListAc myListAc = entityManager.find(MyListAc.class, id);
+        MyList<BankCard> bankCardMyList = new MyList<>();
+        myListAc.getBankCard().forEach(bankCardMyList::add);
+        return bankCardMyList.sort(comparator);
+    }
+
+    @Override
+    public MyList<BankCard> shuffle(Long id) {
+        MyListAc myListAc = entityManager.find(MyListAc.class, id);
+        MyList<BankCard> bankCardMyList = new MyList<>();
+        myListAc.getBankCard().forEach(bankCardMyList::add);
+        bankCardMyList.shuffle();
+        return bankCardMyList;
+
     }
 
 
