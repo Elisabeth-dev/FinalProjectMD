@@ -17,7 +17,7 @@ public class MyListAc {
     private String nameAc;
 
     @JsonBackReference
-    @OneToMany( mappedBy = "myListAc")
+    @OneToMany( fetch=FetchType.LAZY, mappedBy = "myListAc", cascade = CascadeType.ALL)
     @Column(name = "bankCard")
     private List<BankCard> bankCard;
 

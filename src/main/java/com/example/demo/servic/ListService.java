@@ -15,4 +15,6 @@ public interface ListService {
     void deleteElementById(Long myListAc_id, Long bankCard_Id);
     BankCard findBankCardById(Long myListAc_id, Long bankCard_Id);
     Long getSizeBankCard(Long myListAc_id);
+    void addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList);
+    Long findDuplicatesElements(Long id, Long json_element);
 }

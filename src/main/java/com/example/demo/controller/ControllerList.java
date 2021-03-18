@@ -32,7 +32,7 @@ public class ControllerList {
     }
 
     @GetMapping("/lists/{id}")
-    public MyListAcIdResponseDTO findAlllist(@PathVariable Long id){
+    public MyListAcIdResponseDTO findAllList(@PathVariable Long id){
 
         return MyListAcIdResponseDTO.from(listService.findIdList(id));
     }
@@ -73,5 +73,16 @@ public class ControllerList {
         return listService.getSizeBankCard(id);
     }
 
+    @PutMapping("/lists/{id}/elements")
+    public ResponseEntity addListBankCard(@PathVariable Long id, @RequestBody ListBankCardRequestDTO listBankCardRequestDTO){
+        listService.addNListBankCard(id, listBankCardRequestDTO.fromListBankCards());
+         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/lists/{id}/find")
+    public Long findDuplicatesElements(@PathVariable Long id, @RequestParam(name = "element") Long json_element){
+
+        return listService.findDuplicatesElements(id, json_element);
+    }
 
 }

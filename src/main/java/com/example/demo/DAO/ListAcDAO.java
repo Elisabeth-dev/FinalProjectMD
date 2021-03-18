@@ -56,6 +56,7 @@ public class ListAcDAO implements ListDAO{
     }
 
     @Override
+    @Transactional
     public BankCard findBankCardById(Long myListAc_id, Long bankCard_Id) {
         BankCard bankCard = entityManager.createQuery("select b from BankCard b where b.bankCardId = :id and b.myListAc = :list", BankCard.class)
                 .setParameter("id", bankCard_Id)
@@ -65,6 +66,7 @@ public class ListAcDAO implements ListDAO{
     }
 
     @Override
+    @Transactional
     public Long getSizeBankCard(Long myListAc_id) {
 
         Long size = (Long) entityManager.createQuery("select count(b.bankCardId) from BankCard b where b.myListAc = :id")
@@ -74,5 +76,38 @@ public class ListAcDAO implements ListDAO{
 
         return size;
     }
+
+    @Override
+    @Transactional
+    public void addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList) {
+        bankCardsList.stream()
+                .forEach(bankCard -> {
+                    bankCard.setMyListAc(findListId(myListAc_id));
+                });
+//        MyListAc myListAc = entityManager.createQuery("select b from MyListAc b where b.myListAcId = :id", MyListAc.class)
+//                .setParameter("id", myListAc_id)
+//                .getSingleResult();
+
+        MyListAc myListAc = entityManager.find(MyListAc.class, myListAc_id);
+        myListAc.getBankCard().addAll(bankCardsList);
+
+        entityManager.merge(myListAc);
+        entityManager.flush();
+    }
+
+    @Override
+    public Long findDuplicatesElements(Long id, Long json_element) {
+        BankCard bankCard = entityManager.find(BankCard.class, json_element);
+
+        Long res = entityManager.createQuery("select count(b.bankCardId) from BankCard b where b.myListAc = :id and b.cardNumber = :carNam and b.nameCard = :cartName", Long.class)
+                .setParameter("id", findListId(id))
+                .setParameter("carNam", bankCard.getCardNumber())
+                .setParameter("cartName", bankCard.getNameCard())
+                .getSingleResult();
+
+
+        return res;
+    }
+
 
 }

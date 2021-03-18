@@ -52,4 +52,14 @@ public class ListServiceAc implements ListService {
         return listDAO.getSizeBankCard(myListAc_id);
     }
 
+    @Override
+    public void addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList) {
+        listDAO.addNListBankCard(myListAc_id, bankCardsList);
+    }
+
+    @Override
+    public Long findDuplicatesElements(Long id, Long json_element) {
+        return listDAO.findDuplicatesElements(id,json_element);
+    }
+
 }
