@@ -1,5 +1,6 @@
 package com.example.demo.DAO;
 
+import com.example.demo.entity.Account;
 import com.example.demo.entity.BankCard;
 import com.example.demo.entity.MyListAc;
 import com.example.demo.mylists.AdvancedList;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.message.Message;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Comparator;
@@ -20,14 +22,32 @@ public class ListAcDAO implements ListDAO{
     private  EntityManager entityManager;
 
     @Override
-    public List<MyListAc> findAll() {
-
-        return entityManager.createQuery("select e from MyListAc e", MyListAc.class).getResultList();
+    public List<MyListAc> findAll(String account_login) {
+        Account account = findAccountLogin(account_login);
+        return entityManager.createQuery("select b from MyListAc b where b.account = :id", MyListAc.class)
+        .setParameter("id", account)
+        .getResultList();
     }
 
     @Override
     public MyListAc findListId(Long myListAc_id) {
         return entityManager.find(MyListAc.class, myListAc_id);
+    }
+
+    @Override
+    public Boolean idArrangedLogin(Long list_id, String accountLogin) {
+        Account account = findAccountLogin(accountLogin);
+        try {
+            MyListAc ac = entityManager.createQuery("select b from MyListAc b where b.account = :ac_id and b.myListAcId = :list_id", MyListAc.class)
+                    .setParameter("ac_id", account)
+                    .setParameter("list_id", list_id)
+                    .getSingleResult();
+            return true;
+        } catch (NoResultException e){
+            return false;
+        }
+
+
     }
 
     @Override
@@ -40,11 +60,19 @@ public class ListAcDAO implements ListDAO{
     }
 
     @Override
+    public Account findAccountLogin(String login_account) {
+        Account account = entityManager.createQuery("select b from Account b where b.login = :login", Account.class)
+                .setParameter("login", login_account)
+                .getSingleResult();
+        return account;
+    }
+
+    @Override
     @Transactional
-    public MyListAc creatListAc(MyListAc myListAc) {
+    public void creatListAc(MyListAc myListAc, String login_account) {
+        myListAc.setAccount(findAccountLogin(login_account));
         entityManager.persist(myListAc);
         entityManager.flush();
-        return myListAc;
     }
 
     @Override

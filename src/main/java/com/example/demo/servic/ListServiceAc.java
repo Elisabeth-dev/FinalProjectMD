@@ -1,7 +1,6 @@
 package com.example.demo.servic;
 
 import com.example.demo.DAO.ListDAO;
-import com.example.demo.DTO.MyListAcResponseDTO;
 import com.example.demo.entity.BankCard;
 import com.example.demo.entity.MyListAc;
 import com.example.demo.mylists.MyList;
@@ -17,8 +16,8 @@ public class ListServiceAc implements ListService {
     private ListDAO listDAO;
 
     @Override
-    public List<MyListAc> findAllList() {
-        return listDAO.findAll();
+    public List<MyListAc> findAllList(String account_login) {
+        return listDAO.findAll(account_login);
     }
 
     @Override
@@ -27,13 +26,18 @@ public class ListServiceAc implements ListService {
     }
 
     @Override
+    public Boolean idArrangedLogin(Long list_id, String accountLogin) {
+        return listDAO.idArrangedLogin(list_id, accountLogin);
+    }
+
+    @Override
     public BankCard creatCardById(BankCard bankCard, Long myListAc_id) {
         return listDAO.creatCardById(bankCard, myListAc_id);
     }
 
     @Override
-    public MyListAc creatMyListAc(MyListAc myListAc) {
-        return listDAO.creatListAc(myListAc);
+    public void creatMyListAc(MyListAc myListAc, String login_account) {
+        listDAO.creatListAc(myListAc, login_account);
     }
 
     @Override
@@ -71,5 +75,7 @@ public class ListServiceAc implements ListService {
     public MyList<BankCard> shuffle(Long id) {
         return listDAO.shuffle(id);
     }
+
+
 
 }
