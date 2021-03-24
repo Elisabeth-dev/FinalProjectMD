@@ -5,6 +5,7 @@ import com.example.demo.entity.BankCard;
 import com.example.demo.entity.MyListAc;
 import com.example.demo.mylists.MyList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +22,10 @@ public class ListServiceAc implements ListService {
     }
 
     @Override
-    public MyListAc findIdList(Long myListAc_id) {
-        return listDAO.findListId(myListAc_id);
+    public ResponseEntity<MyListAc> findListIdAnswer(Long myListAc_id) {
+        return listDAO.findListIdAnswer(myListAc_id);
     }
+
 
     @Override
     public Boolean idArrangedLogin(Long list_id, String accountLogin) {
@@ -31,8 +33,8 @@ public class ListServiceAc implements ListService {
     }
 
     @Override
-    public BankCard creatCardById(BankCard bankCard, Long myListAc_id) {
-        return listDAO.creatCardById(bankCard, myListAc_id);
+    public ResponseEntity<?> creatCardById(BankCard bankCard, Long myListAc_id) {
+         return listDAO.creatCardById(bankCard, myListAc_id);
     }
 
     @Override
@@ -41,38 +43,38 @@ public class ListServiceAc implements ListService {
     }
 
     @Override
-    public void deleteElementById(Long myListAc_id, Long bankCard_Id) {
-
-        listDAO.deleteElementById(myListAc_id,bankCard_Id);
+    public ResponseEntity<?> deleteElementById(Long myListAc_id, Long bankCard_Id) {
+        return listDAO.deleteElementById(myListAc_id,bankCard_Id);
     }
 
+
     @Override
-    public BankCard findBankCardById(Long myListAc_id, Long bankCard_Id) {
+    public ResponseEntity<BankCard> findBankCardById(Long myListAc_id, Long bankCard_Id) {
         return listDAO.findBankCardById(myListAc_id, bankCard_Id);
     }
 
     @Override
-    public Long getSizeBankCard(Long myListAc_id) {
+    public ResponseEntity<Long> getSizeBankCard(Long myListAc_id) {
         return listDAO.getSizeBankCard(myListAc_id);
     }
 
     @Override
-    public void addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList) {
-        listDAO.addNListBankCard(myListAc_id, bankCardsList);
+    public ResponseEntity<?> addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList) {
+        return listDAO.addNListBankCard(myListAc_id, bankCardsList);
     }
 
     @Override
-    public Long findDuplicatesElements(Long id, Long json_element) {
+    public ResponseEntity<Long> findDuplicatesElements(Long id, Long json_element) {
         return listDAO.findDuplicatesElements(id,json_element);
     }
 
     @Override
-    public MyList<BankCard> sort(Long id) {
+    public ResponseEntity<MyList<BankCard>> sort(Long id) {
         return listDAO.sort(id);
     }
 
     @Override
-    public MyList<BankCard> shuffle(Long id) {
+    public ResponseEntity<MyList<BankCard>> shuffle(Long id) {
         return listDAO.shuffle(id);
     }
 

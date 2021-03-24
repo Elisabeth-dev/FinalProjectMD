@@ -10,6 +10,9 @@ public class BankCardByIdResponseDTO {
     private int cardNumber;
 
     public static BankCardByIdResponseDTO fromBC(BankCard bankCard){
+        if(bankCard == null){
+            return null;
+        }
         BankCardByIdResponseDTO dto = new BankCardByIdResponseDTO();
         dto.setNameCard(bankCard.getNameCard());
         dto.setCardNumber(bankCard.getCardNumber());

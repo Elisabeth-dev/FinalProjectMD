@@ -20,7 +20,7 @@ public class BankCard {
     private int cardNumber;
 
     @JsonBackReference
-    @ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "myListAc_id")
     private MyListAc myListAc;
 

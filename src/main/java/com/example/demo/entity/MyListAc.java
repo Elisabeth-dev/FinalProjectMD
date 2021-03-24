@@ -25,7 +25,7 @@ public class MyListAc {
     private List<BankCard> bankCard;
 
     @JsonBackReference
-    @ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "account_Id")
     private Account account;
 

@@ -22,7 +22,7 @@ public class Account {
     private String role;
 
     @JsonBackReference
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @Column(name = "account_Id")
     private List<MyListAc> myListAc;
 

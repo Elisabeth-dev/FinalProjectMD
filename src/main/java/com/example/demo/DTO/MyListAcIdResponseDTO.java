@@ -15,6 +15,9 @@ public class MyListAcIdResponseDTO {
     private List<BankCard> bankCard;
 
     public static MyListAcIdResponseDTO from(MyListAc myListAc){
+        if(myListAc == null){
+            return null;
+        }
         MyListAcIdResponseDTO dto = new MyListAcIdResponseDTO();
         dto.setNameAc(myListAc.getNameAc());
         dto.setBankCard(myListAc.getBankCard());
