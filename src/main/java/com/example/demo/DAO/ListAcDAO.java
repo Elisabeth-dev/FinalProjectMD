@@ -2,6 +2,7 @@ package com.example.demo.DAO;
 
 import com.example.demo.entity.Account;
 import com.example.demo.entity.BankCard;
+import com.example.demo.entity.ComparName;
 import com.example.demo.entity.MyListAc;
 import com.example.demo.mylists.AdvancedList;
 import com.example.demo.mylists.MyList;
@@ -15,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -38,45 +40,40 @@ public class ListAcDAO implements ListDAO{
     }
 
     @Override
-    public ResponseEntity<MyListAc> findListIdAnswer(Long myListAc_id) {
-        String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        MyListAc myListAc = findListId(myListAc_id);
-        if(idArrangedLogin(myListAc.getMyListAcId(), account_login)){
-            return new ResponseEntity<>(entityManager.find(MyListAc.class, myListAc_id), HttpStatus.OK);
+    public MyListAc findListIdAnswer(Long myListAc_id, String accountLogin) {
+        Account account = findAccountLogin(accountLogin);
+        try {
+            return entityManager.createQuery("select b from MyListAc b where b.account = :ac_login and b.myListAcId = :list_id", MyListAc.class)
+                    .setParameter("ac_login", account)
+                    .setParameter("list_id", myListAc_id)
+                    .getSingleResult();
+        } catch (Exception e){
+            return null;
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
     @Override
     public Boolean idArrangedLogin(Long list_id, String accountLogin) {
         Account account = findAccountLogin(accountLogin);
-        try {
-            MyListAc ac = entityManager.createQuery("select b from MyListAc b where b.account = :ac_id and b.myListAcId = :list_id", MyListAc.class)
+            Long ac = entityManager.createQuery("select count(b.myListAcId) from MyListAc b where b.account = :ac_id and b.myListAcId = :list_id", Long.class)
                     .setParameter("ac_id", account)
                     .setParameter("list_id", list_id)
                     .getSingleResult();
-            return true;
-        } catch (NoResultException e){
-            return false;
-        }
-
-
+            return ac > 0;
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> creatCardById(BankCard bankCard, Long myListAc_id) {
-        String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        MyListAc myListAc = findListId(myListAc_id);
-        if(idArrangedLogin(myListAc.getMyListAcId(), account_login)){
+    public BankCard creatCardById(BankCard bankCard, Long myListAc_id, String accountLogin) {
+        if(idArrangedLogin(myListAc_id, accountLogin)){
             bankCard.setMyListAc(findListId(myListAc_id));
             entityManager.persist(bankCard);
             entityManager.flush();
-            return  new ResponseEntity<>(HttpStatus.OK);
+            return  bankCard;
         }
 
-        return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
     }
 
 
@@ -99,55 +96,47 @@ public class ListAcDAO implements ListDAO{
 
     @Override
     @Transactional
-    public ResponseEntity<?> deleteElementById(Long myListAc_id, Long bankCard_Id) {
-        String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        MyListAc myListAc = findListId(myListAc_id);
-        if(idArrangedLogin(myListAc.getMyListAcId(), account_login)){
+    public void deleteElementById(Long myListAc_id, Long bankCard_Id, String accountLogin) {
+        if(idArrangedLogin(myListAc_id, accountLogin)){
             BankCard bankCard = entityManager.createQuery("select b from BankCard b where b.bankCardId = :id and b.myListAc = :list", BankCard.class)
                     .setParameter("id", bankCard_Id)
                     .setParameter("list", findListId(myListAc_id))
                     .getSingleResult();
             entityManager.remove(bankCard);
-            return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+        throw new NullPointerException("drop");
     }
 
     @Override
     @Transactional
-    public ResponseEntity<BankCard> findBankCardById(Long myListAc_id, Long bankCard_Id) {
-        String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public BankCard findBankCardById(Long myListAc_id, Long bankCard_Id, String accountLogin) {
         MyListAc myListAc = findListId(myListAc_id);
-        if(idArrangedLogin(myListAc.getMyListAcId(), account_login)){
+        if(idArrangedLogin(myListAc.getMyListAcId(), accountLogin)){
             BankCard bankCard = entityManager.createQuery("select b from BankCard b where b.bankCardId = :id and b.myListAc = :list", BankCard.class)
                     .setParameter("id", bankCard_Id)
                     .setParameter("list", findListId(myListAc_id))
                     .getSingleResult();
-            return new ResponseEntity<>(bankCard, HttpStatus.OK);
+            return bankCard;
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Long> getSizeBankCard(Long myListAc_id) {
-
-        String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(idArrangedLogin(myListAc_id, account_login)){
+    public Long getSizeBankCard(Long myListAc_id, String accountLogin) {
+        if(idArrangedLogin(myListAc_id, accountLogin)){
             Long size = (Long) entityManager.createQuery("select count(b.bankCardId) from BankCard b where b.myListAc = :id")
                     .setParameter("id", findListId(myListAc_id))
                     .getSingleResult();
-            return new ResponseEntity<>(size, HttpStatus.OK);
+            return size;
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList) {
-        String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(idArrangedLogin(myListAc_id, account_login)){
+    public void addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList, String accountLogin) {
+        if(idArrangedLogin(myListAc_id, accountLogin)){
             bankCardsList.stream()
                     .forEach(bankCard -> {
                         bankCard.setMyListAc(findListId(myListAc_id));
@@ -158,15 +147,14 @@ public class ListAcDAO implements ListDAO{
 
             entityManager.merge(myListAc);
             entityManager.flush();
-            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            throw  new NullPointerException("drop");
         }
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public ResponseEntity<Long> findDuplicatesElements(Long id, Long json_element) {
-        String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(idArrangedLogin(id, account_login)){
+    public Long findDuplicatesElements(Long id, Long json_element, String accountLogin) {
+        if(idArrangedLogin(id, accountLogin)){
             BankCard bankCard = entityManager.find(BankCard.class, json_element);
 
             Long res = entityManager.createQuery("select count(b.bankCardId) from BankCard b where b.myListAc = :id and b.cardNumber = :carNam and b.nameCard = :cartName", Long.class)
@@ -174,13 +162,28 @@ public class ListAcDAO implements ListDAO{
                     .setParameter("carNam", bankCard.getCardNumber())
                     .setParameter("cartName", bankCard.getNameCard())
                     .getSingleResult();
-            return new ResponseEntity<>(res, HttpStatus.OK);
+            return res;
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
     }
 
 
-    Comparator<BankCard> comparator = Comparator.comparing(BankCard::getCardNumber);
+
+    public Comparator<BankCard> findComparator(String name_comparator){
+        ComparatorDAO comparatorDAO = new ComparatorDAO();
+        ComparName comparatorScript = entityManager.createQuery("select b from ComparName b where b.compar_name = :name", ComparName.class)
+                .setParameter("name", name_comparator)
+                .getSingleResult();
+
+        try {
+            Comparator<BankCard> comparator = comparatorDAO.load(comparatorScript.getText_Comparator());
+            return comparator;
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -189,28 +192,28 @@ public class ListAcDAO implements ListDAO{
 
 
     @Override
-    public ResponseEntity<MyList<BankCard>> sort(Long id) {
-        String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(idArrangedLogin(id, account_login)){
+    public MyList<BankCard> sort(Long id, String name_comparator, String accountLogin) {
+
+        if(idArrangedLogin(id, accountLogin)){
             MyListAc myListAc = entityManager.find(MyListAc.class, id);
             MyList<BankCard> bankCardMyList = new MyList<>();
             myListAc.getBankCard().forEach(bankCardMyList::add);
-            return new ResponseEntity<>(bankCardMyList.sort(comparator), HttpStatus.OK);
+            return bankCardMyList.sort(findComparator(name_comparator));
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
     }
 
     @Override
-    public ResponseEntity<MyList<BankCard>> shuffle(Long id) {
+    public MyList<BankCard> shuffle(Long id, String accountLogin) {
         String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(idArrangedLogin(id, account_login)){
             MyListAc myListAc = entityManager.find(MyListAc.class, id);
             MyList<BankCard> bankCardMyList = new MyList<>();
             myListAc.getBankCard().forEach(bankCardMyList::add);
             bankCardMyList.shuffle();
-            return new ResponseEntity<>(bankCardMyList, HttpStatus.OK);
+            return bankCardMyList;
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
 
     }
 

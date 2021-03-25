@@ -13,16 +13,16 @@ public interface ListDAO {
 
   List<MyListAc> findAll(String account_login);
   MyListAc findListId(Long myListAc_id);
-  ResponseEntity<MyListAc> findListIdAnswer(Long myListAc_id);
+  MyListAc findListIdAnswer(Long myListAc_id, String accountLogin);
   Boolean idArrangedLogin(Long list_id, String accountLogin);
   Account findAccountLogin(String login_account);
-  ResponseEntity<?> creatCardById(BankCard bankCard, Long myListAc_id);
+  BankCard creatCardById(BankCard bankCard, Long myListAc_id, String accountLogin);
   void creatListAc(MyListAc myListAc, String login_account);
-  ResponseEntity<?> deleteElementById(Long myListAc_id, Long bankCard_Id);
-  ResponseEntity<BankCard> findBankCardById(Long myListAc_id, Long bankCard_Id);
-  ResponseEntity<Long> getSizeBankCard(Long myListAc_id);
-  ResponseEntity<?> addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList);
-  ResponseEntity<Long> findDuplicatesElements(Long id, Long json_element);
-  ResponseEntity<MyList<BankCard>> sort(Long id);
-  ResponseEntity<MyList<BankCard>> shuffle(Long id);
+  void deleteElementById(Long myListAc_id, Long bankCard_Id, String accountLogin);
+  BankCard findBankCardById(Long myListAc_id, Long bankCard_Id, String accountLogin);
+  Long getSizeBankCard(Long myListAc_id, String accountLogin);
+  void addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList, String accountLogin);
+  Long findDuplicatesElements(Long id, Long json_element, String accountLogin);
+  MyList<BankCard> sort(Long id, String name_comparator, String accountLogin);
+  MyList<BankCard> shuffle(Long id, String accountLogin);
 }

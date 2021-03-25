@@ -6,6 +6,7 @@ import com.example.demo.entity.MyListAc;
 import com.example.demo.mylists.MyList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +23,9 @@ public class ListServiceAc implements ListService {
     }
 
     @Override
-    public ResponseEntity<MyListAc> findListIdAnswer(Long myListAc_id) {
-        return listDAO.findListIdAnswer(myListAc_id);
+    public MyListAc findListIdAnswer(Long myListAc_id) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return listDAO.findListIdAnswer(myListAc_id, accountLogin);
     }
 
 
@@ -33,49 +35,58 @@ public class ListServiceAc implements ListService {
     }
 
     @Override
-    public ResponseEntity<?> creatCardById(BankCard bankCard, Long myListAc_id) {
-         return listDAO.creatCardById(bankCard, myListAc_id);
+    public BankCard creatCardById(BankCard bankCard, Long myListAc_id) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+         return listDAO.creatCardById(bankCard, myListAc_id, accountLogin);
     }
 
     @Override
-    public void creatMyListAc(MyListAc myListAc, String login_account) {
-        listDAO.creatListAc(myListAc, login_account);
+    public void creatListAc(MyListAc myListAc) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+         listDAO.creatListAc(myListAc, accountLogin);
     }
 
     @Override
-    public ResponseEntity<?> deleteElementById(Long myListAc_id, Long bankCard_Id) {
-        return listDAO.deleteElementById(myListAc_id,bankCard_Id);
+    public void deleteElementById(Long myListAc_id, Long bankCard_Id) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        listDAO.deleteElementById(myListAc_id,bankCard_Id, accountLogin);
     }
 
 
     @Override
-    public ResponseEntity<BankCard> findBankCardById(Long myListAc_id, Long bankCard_Id) {
-        return listDAO.findBankCardById(myListAc_id, bankCard_Id);
+    public BankCard findBankCardById(Long myListAc_id, Long bankCard_Id) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return listDAO.findBankCardById(myListAc_id, bankCard_Id, accountLogin);
     }
 
     @Override
-    public ResponseEntity<Long> getSizeBankCard(Long myListAc_id) {
-        return listDAO.getSizeBankCard(myListAc_id);
+    public Long getSizeBankCard(Long myListAc_id) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return listDAO.getSizeBankCard(myListAc_id, accountLogin);
     }
 
     @Override
-    public ResponseEntity<?> addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList) {
-        return listDAO.addNListBankCard(myListAc_id, bankCardsList);
+    public void addNListBankCard(Long myListAc_id, List<BankCard> bankCardsList) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        listDAO.addNListBankCard(myListAc_id, bankCardsList, accountLogin);
     }
 
     @Override
-    public ResponseEntity<Long> findDuplicatesElements(Long id, Long json_element) {
-        return listDAO.findDuplicatesElements(id,json_element);
+    public Long findDuplicatesElements(Long id, Long json_element) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return listDAO.findDuplicatesElements(id,json_element, accountLogin);
     }
 
     @Override
-    public ResponseEntity<MyList<BankCard>> sort(Long id) {
-        return listDAO.sort(id);
+    public MyList<BankCard> sort(Long id, String name_comparator) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return listDAO.sort(id, name_comparator, accountLogin);
     }
 
     @Override
-    public ResponseEntity<MyList<BankCard>> shuffle(Long id) {
-        return listDAO.shuffle(id);
+    public MyList<BankCard> shuffle(Long id) {
+        String accountLogin =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return listDAO.shuffle(id, accountLogin);
     }
 
 

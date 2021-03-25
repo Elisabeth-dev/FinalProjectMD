@@ -43,77 +43,94 @@ public class ControllerList {
 
     @GetMapping("/lists/{id}")
     public ResponseEntity<MyListAcIdResponseDTO> findAllList(@PathVariable Long id){
-        MyListAcIdResponseDTO dto = MyListAcIdResponseDTO.from(listService.findListIdAnswer(id).getBody());
-        if(dto == null){
+        MyListAcIdResponseDTO dto = MyListAcIdResponseDTO.from(listService.findListIdAnswer(id));
+        if (dto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(dto,listService.findListIdAnswer(id).getStatusCode());
-
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping("/lists/{id}/element")
     public ResponseEntity<?> addNewCard(@PathVariable Long id, @RequestBody BankCardRequestDTO bankCardRequestDTO){
-        return listService.creatCardById(bankCardRequestDTO.toBancCard(), id);
+        BankCard bankCard = listService.creatCardById(bankCardRequestDTO.toBancCard(), id);
+        if(bankCard == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/lists")
-    public ResponseEntity addNewListAc(@RequestBody ListAcRequestDTO listAcRequestDTO){
-        String login_account = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        listService.creatMyListAc(listAcRequestDTO.toLisAc(), login_account);
+    public ResponseEntity<?> addNewListAc(@RequestBody ListAcRequestDTO listAcRequestDTO){
+        listService.creatListAc(listAcRequestDTO.toLisAc());
         return ResponseEntity.ok().build();
     }
 
 
     @DeleteMapping("/lists/{id}/elements/{id_element}")
     public ResponseEntity<?> deleteElements(@PathVariable Long id, @PathVariable Long id_element){
+        try {
+            listService.deleteElementById(id, id_element);
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-            return listService.deleteElementById(id, id_element);
     }
 
     @GetMapping("/lists/{id}/elements/{id_element}")
     public ResponseEntity<BankCardByIdResponseDTO> findBankCardById(@PathVariable Long id, @PathVariable Long id_element){
-        if(listService.findBankCardById(id,id_element).getBody() == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        BankCardByIdResponseDTO dto = BankCardByIdResponseDTO.fromBC(listService.findBankCardById(id,id_element));
+        if(dto == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(BankCardByIdResponseDTO.fromBC(listService.findBankCardById(id,id_element).getBody()),
-                listService.findBankCardById(id,id_element).getStatusCode());
+        return new ResponseEntity<>( dto, HttpStatus.OK);
     }
 
     @GetMapping("/lists/{id}/size")
     public ResponseEntity<Long> getSizeBankCards(@PathVariable Long id){
-        if(listService.getSizeBankCard(id).getBody() == null ){
+        Long size = listService.getSizeBankCard(id);
+        if(size == null ){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return listService.getSizeBankCard(id);
+        return new ResponseEntity<>(size, HttpStatus.OK);
     }
 
     @PutMapping("/lists/{id}/elements")
     public ResponseEntity<?> addListBankCard(@PathVariable Long id, @RequestBody ListBankCardRequestDTO listBankCardRequestDTO){
-         return listService.addNListBankCard(id, listBankCardRequestDTO.fromListBankCards());
+        try {
+            listService.addNListBankCard(id, listBankCardRequestDTO.fromListBankCards());
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @GetMapping("/lists/{id}/find")
     public ResponseEntity<Long> findDuplicatesElements(@PathVariable Long id, @RequestParam(name = "element") Long json_element){
-        if(listService.findDuplicatesElements(id, json_element).getBody() == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Long res = listService.findDuplicatesElements(id, json_element);
+        if (res == null) {
+            return ResponseEntity.notFound().build();
         }
-        return listService.findDuplicatesElements(id, json_element);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("/lists/{id}/sort")
-    public ResponseEntity<MyList<BankCard>> sort(@PathVariable Long id){
-        if(listService.sort(id).getBody() == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<MyList<BankCard>> sort(@PathVariable Long id, @RequestParam(name = "name_comparator", required = false) String name_comparator){
+        MyList<BankCard> listBankCard =  listService.sort(id, name_comparator);
+        if(listBankCard == null){
+            return ResponseEntity.notFound().build();
         }
-        return listService.sort(id);
+        return new ResponseEntity<>(listBankCard, HttpStatus.OK);
     }
 
     @GetMapping("/lists/{id}/shuffle")
     public ResponseEntity<MyList<BankCard>> shuffle(@PathVariable Long id){
-        if(listService.shuffle(id).getBody() == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        MyList<BankCard> listBankCard = listService.shuffle(id);
+        if(listBankCard == null){
+            return ResponseEntity.notFound().build();
         }
-        return listService.shuffle(id);
+        return new ResponseEntity<>(listBankCard, HttpStatus.OK);
 
     }
 
