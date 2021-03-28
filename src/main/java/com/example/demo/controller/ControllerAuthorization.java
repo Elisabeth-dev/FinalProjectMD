@@ -10,10 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -25,6 +22,11 @@ public class ControllerAuthorization {
 
     @Autowired
     private JWTUtil jwtTokenUtil;
+
+    @GetMapping("/user")
+    public String user() {
+        return "User";
+    }
 
     @PostMapping("/authenticate")
     @ResponseStatus(HttpStatus.OK)

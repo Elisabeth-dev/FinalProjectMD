@@ -103,8 +103,9 @@ public class ListAcDAO implements ListDAO{
                     .setParameter("list", findListId(myListAc_id))
                     .getSingleResult();
             entityManager.remove(bankCard);
+        } else {
+            throw new NullPointerException("drop");
         }
-        throw new NullPointerException("drop");
     }
 
     @Override

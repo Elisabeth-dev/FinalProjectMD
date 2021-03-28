@@ -1,6 +1,7 @@
 package com.example.demo.configSecurity;
 
 public class AuthResponse {
+
     private String jwtToken;
 
     public AuthResponse() {
