@@ -172,17 +172,18 @@ public class ListAcDAO implements ListDAO{
 
     public Comparator<BankCard> findComparator(String name_comparator){
         ComparatorDAO comparatorDAO = new ComparatorDAO();
-        ComparName comparatorScript = entityManager.createQuery("select b from ComparName b where b.compar_name = :name", ComparName.class)
-                .setParameter("name", name_comparator)
-                .getSingleResult();
 
         try {
+            ComparName comparatorScript = entityManager.createQuery("select b from ComparName b where b.compar_name = :name", ComparName.class)
+                    .setParameter("name", name_comparator)
+                    .getSingleResult();
             Comparator<BankCard> comparator = comparatorDAO.load(comparatorScript.getText_Comparator());
             return comparator;
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            e.printStackTrace();
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | NoResultException e) {
+            Comparator<BankCard> comparatorDefault = Comparator.comparing(BankCard::getNameCard);
+            return comparatorDefault;
         }
-        return null;
+
     }
 
 
@@ -217,6 +218,4 @@ public class ListAcDAO implements ListDAO{
         return null;
 
     }
-
-
 }

@@ -1,14 +1,13 @@
 package com.example.demo;
 
 
-import com.example.demo.configSecurity.AuthRequest;
-import com.example.demo.configSecurity.AuthResponse;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+
 
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,7 +25,6 @@ public class ControllerListTest {
             "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWQiLCJleHAiOjE2MTcwMzkwNzgsImlhdCI6MTYxNjkxOTA3OCwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.GjNBp91uzHHhSXkcHr1DtGZ6OZDlNVBi8r9U-qj-hcY";
 
     @Test
-    //@WithMockUser(username = "liza", password = "liza", roles = "USER")
     public void creatNewListAc() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.post("/user/lists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -51,7 +49,7 @@ public class ControllerListTest {
 
     @Test
     public void deleteElementInListAc() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.delete("/user/lists/2/elements/16")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/user/lists/2/elements/17")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", token))
@@ -80,7 +78,6 @@ public class ControllerListTest {
     }
 
     @Test
-    //@WithMockUser(username = "liza", password = "liza", roles = "USER")
     public void getAllListAccount() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.get("/user/lists")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -116,7 +116,7 @@ public class ControllerList {
     }
 
     @GetMapping("/lists/{id}/sort")
-    public ResponseEntity<MyList<BankCard>> sort(@PathVariable Long id, @RequestParam(name = "name_comparator", required = false) String name_comparator){
+    public ResponseEntity<MyList<BankCard>> sort(@PathVariable Long id, @RequestParam(name = "name_comparator", required = false, defaultValue = "default") String name_comparator){
         MyList<BankCard> listBankCard =  listService.sort(id, name_comparator);
         if(listBankCard == null){
             return ResponseEntity.notFound().build();
