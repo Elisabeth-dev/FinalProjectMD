@@ -1,56 +1,55 @@
 package com.example.demo.configSecurity;
 
-import com.example.demo.servic.AccountServiceRe;
+import com.example.demo.configSecurity.MyUserDetailsService.CustomUserDetails;
+import com.example.demo.configSecurity.MyUserDetailsService.CustomUserDetailsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.filter.GenericFilterBean;
+
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
-import java.util.List;
+
+import static org.springframework.util.StringUtils.hasText;
 
 @Component
-public class JWTFilter extends OncePerRequestFilter {
+public class JWTFilter extends GenericFilterBean {
+
+    public static final String AUTHORIZATION = "Authorization";
 
     @Autowired
-    private JWTUtil jwtUtil;
+    private JwtProvider jwtProvider;
 
     @Autowired
-    private AccountServiceRe accountService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");
-
-        String username = null;
-        String jwt = null;
-
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        logger.info("do filter...");
+        String token = getTokenFromRequest((HttpServletRequest) servletRequest);
+        if (token != null && jwtProvider.validateToken(token)) {
+            String userLogin = jwtProvider.getLoginFromToken(token);
+            CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
+        filterChain.doFilter(servletRequest, servletResponse);
+    }
 
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            String commaSeparatedListOfAuthorities = jwtUtil.extractAuthorities(jwt);
-            List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(commaSeparatedListOfAuthorities);
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(
-                            username, null, authorities);
-
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-
+    private String getTokenFromRequest(HttpServletRequest request) {
+        String bearer = request.getHeader(AUTHORIZATION);
+        if (hasText(bearer) && bearer.startsWith("Bearer ")) {
+            return bearer.substring(7);
         }
-        chain.doFilter(request, response);
-
+        return null;
     }
 }

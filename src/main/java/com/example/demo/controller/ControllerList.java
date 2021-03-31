@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.DTO.*;
+import com.example.demo.configSecurity.MyUserDetailsService.CustomUserDetails;
 import com.example.demo.entity.Account;
 import com.example.demo.entity.BankCard;
 import com.example.demo.entity.MyListAc;
@@ -37,7 +38,8 @@ public class ControllerList {
 
     @GetMapping("/lists")
     public List<MyListAcResponseDTO> findAllAc(){
-        String account_login = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetails account = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String account_login = account.getUsername();
         return listService.findAllList(account_login).stream().map(MyListAcResponseDTO::from).collect(Collectors.toList());
     }
 

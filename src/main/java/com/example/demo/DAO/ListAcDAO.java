@@ -207,8 +207,7 @@ public class ListAcDAO implements ListDAO{
 
     @Override
     public MyList<BankCard> shuffle(Long id, String accountLogin) {
-        String account_login =(String)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(idArrangedLogin(id, account_login)){
+        if(idArrangedLogin(id, accountLogin)){
             MyListAc myListAc = entityManager.find(MyListAc.class, id);
             MyList<BankCard> bankCardMyList = new MyList<>();
             myListAc.getBankCard().forEach(bankCardMyList::add);

@@ -2,11 +2,14 @@ package com.example.demo.configSecurity;
 
 import lombok.Data;
 
-@Data
-public class AuthRequest {
+import javax.validation.constraints.NotEmpty;
 
+@Data
+public class RegistrationRequest {
+
+    @NotEmpty
     private String login;
 
+    @NotEmpty
     private String password;
-
 }

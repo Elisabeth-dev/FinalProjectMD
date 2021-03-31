@@ -19,7 +19,10 @@ public class Account {
 
     private String password;
 
-    private String role;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RoleEntity roleEntity;
 
     @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL)
