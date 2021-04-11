@@ -6,13 +6,12 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "bankCard")
+@Table(name = "bank_card")
 @Data
 public class BankCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     private Long bankCardId;
 
     private String nameCard;
@@ -21,7 +20,7 @@ public class BankCard {
 
     @JsonBackReference
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "myListAc_id")
+    @JoinColumn(name = "my_list_ac_id")
     private MyListAc myListAc;
 
 

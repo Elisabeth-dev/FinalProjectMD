@@ -8,12 +8,11 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "myListAc")
+@Table(name = "my_list_ac")
 @Data
 public class MyListAc {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long myListAcId;
 

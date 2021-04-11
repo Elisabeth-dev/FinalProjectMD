@@ -26,7 +26,7 @@ public class Account {
 
     @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL)
-    @Column(name = "account_Id")
+    @Column(name = "account_id")
     private List<MyListAc> myListAc;
 
 
